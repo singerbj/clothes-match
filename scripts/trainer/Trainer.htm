@@ -1,0 +1,170 @@
+
+<!-- saved from url=(0058)http://127.0.0.1:8080/scripts/trainer/clothes_trainer.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Trainer</title>
+        <style>
+            .color {
+                width: 125px;
+                height: 125px;
+            }
+            img {
+                width: 383px;
+                height: 383px;
+            }
+            body {
+                background-color: #f4f4f6;
+            }
+            p {
+                text-align: center;
+                margin: 50px;
+            }
+        </style>
+
+        <script src="./Trainer_files/jquery.js"></script>
+    </head>
+    <body>
+        <table>
+            <tbody><tr>
+                <td>
+                    <img class="product product1" src="./Trainer_files/H5019_NA6280.png">
+                </td>
+                <td>
+                    <div class="color color1-1" style="background: rgb(158, 136, 106);"></div>
+                    <div class="color color1-2" style="background: rgb(209, 196, 172);"></div>
+                    <div class="color color1-3" style="background: rgb(77, 69, 62);"></div>
+                </td>
+                <td>
+                    <p>Press M if they match</p>
+                    <p>Press N if they don't</p>
+                    <p>Press D to download JSON</p>
+                    <p>Press R to reset your preferences</p>
+                    <p class="stats">299 Preference(s) Saved</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img class="product product2" src="./Trainer_files/J6180_BL8395.png">
+                </td>
+                <td>
+                    <div class="color color2-1" style="background: rgb(180, 196, 207);"></div>
+                    <div class="color color2-2" style="background: rgb(111, 125, 138);"></div>
+                    <div class="color color2-3" style="background: rgb(52, 68, 84);"></div>
+                </td>
+            </tr>
+        </tbody></table>
+
+
+
+        <script>
+            $.get("../product_scripts/tmp_results/jcrew.json").done(function(productData){
+                var allProductData = [];
+                Object.keys(productData).forEach(function(key){
+                    allProductData = allProductData.concat(productData[key]);
+                });
+
+                try {
+                    var savedPreferences = localStorage.getItem('userPreferences');
+                    if (savedPreferences){
+                        window.userPreferences = JSON.parse(savedPreferences) || [];
+                    } else {
+                        window.userPreferences = [];
+                    }
+                } catch (e) {
+                    window.userPreferences = [];
+                }
+
+                var getRandomInt = function(min, max){
+                    min = Math.ceil(min);
+                    max = Math.floor(max);
+                    return Math.floor(Math.random() * (max - min)) + min;
+                };
+
+                var color11Div = document.querySelectorAll('.color1-1')[0];
+                var color12Div = document.querySelectorAll('.color1-2')[0];
+                var color13Div = document.querySelectorAll('.color1-3')[0];
+                var color21Div = document.querySelectorAll('.color2-1')[0];
+                var color22Div = document.querySelectorAll('.color2-2')[0];
+                var color23Div = document.querySelectorAll('.color2-3')[0];
+                var colorDivs = [color11Div, color12Div, color13Div, color21Div, color22Div, color23Div];
+
+                var product1Img = document.querySelectorAll('.product1')[0];
+                var product2Img = document.querySelectorAll('.product2')[0];
+                var statsDiv = document.querySelectorAll('.stats')[0];
+                var product1, product2;
+                var colors;
+
+                var reset = function(){
+                    try {
+                        product1 = allProductData[getRandomInt(0, allProductData.length)];
+                        product2 = allProductData[getRandomInt(0, allProductData.length)];
+                        colors = [
+                            product1.colors[0],
+                            product1.colors[1],
+                            product1.colors[2],
+                            product2.colors[0],
+                            product2.colors[1],
+                            product2.colors[2]
+                        ];
+
+                        product1Img.src = product1.imageFilename.replace(/\/\/Users\/singerbj\/dev\/clothes-match/g, '');
+                        product2Img.src = product2.imageFilename.replace(/\/\/Users\/singerbj\/dev\/clothes-match/g, '');
+
+                        colors.forEach(function(color, i){
+                            colorDivs[i].style.background = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
+                        });
+
+                        statsDiv.innerText = window.userPreferences.length + " Preference(s) Saved";
+                    } catch(e){
+                        console.log(e);
+                        reset();
+                    }
+                };
+                reset();
+
+                var downloadObjectAsJson = function (){
+                    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.userPreferences));
+                    var downloadAnchorNode = document.createElement('a');
+                    downloadAnchorNode.setAttribute("href",     dataStr);
+                    downloadAnchorNode.setAttribute("download", "userPreferences.json");
+                    document.body.appendChild(downloadAnchorNode); // required for firefox
+                    downloadAnchorNode.click();
+                    downloadAnchorNode.remove();
+                };
+
+                var tempData;
+                document.addEventListener("keypress", function(e){
+                    tempData = {};
+
+                    colors.forEach(function(color, i){
+                        tempData['r' + i] = color[0] / 255;
+                        tempData['g' + i] = color[1] / 255;
+                        tempData['b' + i] = color[2] / 255;
+                    });
+
+                    if(e.key === 'm'){
+                        window.userPreferences.push({
+                            input: tempData,
+                            output: { matches: 1 }
+                        });
+                        localStorage.setItem('userPreferences', JSON.stringify(window.userPreferences));
+                        reset();
+                    } else if(e.key === 'n') {
+                        window.userPreferences.push({
+                            input: tempData,
+                            output: { matches: 0 }
+                        });
+                        localStorage.setItem('userPreferences', JSON.stringify(window.userPreferences));
+                        reset();
+                    } else if(e.key === 'r') {
+                        window.userPreferences = [];
+                        localStorage.setItem('userPreferences', JSON.stringify([]));
+                        reset();
+                    } else if (e.key === 'd') {
+                        downloadObjectAsJson();
+                    }
+                }, false);
+            });
+        </script>
+    
+
+</body></html>
