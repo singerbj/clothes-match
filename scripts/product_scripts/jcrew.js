@@ -146,8 +146,8 @@ categories.forEach((category) => {
                         id: product.productCode + "_" + color.colorCode,
                         description: product.productDescription,
                         url: product.productDescription,
-                        imageFilename: "/" + imagesDir + product.productCode + "_" + color.colorCode + ".png",
-                        imageFilenameP: "/" + imagesDir + product.productCode + "_" + color.colorCode + "_p.png",
+                        imageFilename: imagesDir + product.productCode + "_" + color.colorCode + ".png",
+                        imageFilenameP: imagesDir + product.productCode + "_" + color.colorCode + "_p.png",
                         imageUrl: "https://factory.jcrew.com/s7-img-facade/" + product.productCode + "_" + color.colorCode + "?fmt=png&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&wid=400&hei=400",
                         price: product.listPrice.amount,
                         colors: []

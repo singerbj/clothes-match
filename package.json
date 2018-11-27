@@ -50,7 +50,13 @@
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14",
     "webpack-dev-server": "^3.1.2",
-    "webpack-hot-middleware": "^2.22.1"
+    "webpack-hot-middleware": "^2.22.1",
+    "q": "^1.5.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "brain.js": "^1.4.2",
+    "canvas": "^2.0.1",
+    "node-vibrant": "^3.0.0"
   },
   "scripts": {
     "start": "npm-run-all --parallel open:client lift",
