@@ -130,7 +130,7 @@ var processImage = (product) => {
     return deferred.promise;
 };
 
-var categories = ['shirts']; //, 'pants'];
+var categories = ['shirts', 'pants'];
 var productsObj = {};
 var productPromises = [];
 

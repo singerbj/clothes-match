@@ -1,5 +1,4 @@
 
-<!-- saved from url=(0058)http://127.0.0.1:8080/scripts/trainer/clothes_trainer.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Trainer</title>
         <style>
@@ -19,36 +18,34 @@
                 margin: 50px;
             }
         </style>
-
-        <script src="./Trainer_files/jquery.js"></script>
     </head>
     <body>
         <table>
             <tbody><tr>
                 <td>
-                    <img class="product product1" src="./Trainer_files/H5019_NA6280.png">
+                    <img class="product product1">
                 </td>
                 <td>
-                    <div class="color color1-1" style="background: rgb(158, 136, 106);"></div>
-                    <div class="color color1-2" style="background: rgb(209, 196, 172);"></div>
-                    <div class="color color1-3" style="background: rgb(77, 69, 62);"></div>
+                    <div class="color color1-1"></div>
+                    <div class="color color1-2"></div>
+                    <div class="color color1-3"></div>
                 </td>
                 <td>
                     <p>Press M if they match</p>
                     <p>Press N if they don't</p>
                     <p>Press D to download JSON</p>
                     <p>Press R to reset your preferences</p>
-                    <p class="stats">299 Preference(s) Saved</p>
+                    <p class="stats">- Preference(s) Saved</p>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <img class="product product2" src="./Trainer_files/J6180_BL8395.png">
+                    <img class="product product2">
                 </td>
                 <td>
-                    <div class="color color2-1" style="background: rgb(180, 196, 207);"></div>
-                    <div class="color color2-2" style="background: rgb(111, 125, 138);"></div>
-                    <div class="color color2-3" style="background: rgb(52, 68, 84);"></div>
+                    <div class="color color2-1"></div>
+                    <div class="color color2-2"></div>
+                    <div class="color color2-3"></div>
                 </td>
             </tr>
         </tbody></table>
@@ -56,7 +53,7 @@
 
 
         <script>
-            $.get("../product_scripts/tmp_results/jcrew.json").done(function(productData){
+            window.fetch("../product_scripts/tmp_results/jcrew.json").then(response => response.json()).then(function(productData){
                 var allProductData = [];
                 Object.keys(productData).forEach(function(key){
                     allProductData = allProductData.concat(productData[key]);
@@ -106,8 +103,8 @@
                             product2.colors[2]
                         ];
 
-                        product1Img.src = product1.imageFilename.replace(/\/\/Users\/singerbj\/dev\/clothes-match/g, '');
-                        product2Img.src = product2.imageFilename.replace(/\/\/Users\/singerbj\/dev\/clothes-match/g, '');
+                        product1Img.src = product1.imageFilename.replace(/\/Users\/singerbj\/dev\/clothes-match/g, '');
+                        product2Img.src = product2.imageFilename.replace(/\/Users\/singerbj\/dev\/clothes-match/g, '');
 
                         colors.forEach(function(color, i){
                             colorDivs[i].style.background = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
@@ -135,6 +132,7 @@
                 document.addEventListener("keypress", function(e){
                     tempData = {};
 
+                    console.log(colors);
                     colors.forEach(function(color, i){
                         tempData['r' + i] = color[0] / 255;
                         tempData['g' + i] = color[1] / 255;
@@ -165,6 +163,6 @@
                 }, false);
             });
         </script>
-    
+
 
 </body></html>
