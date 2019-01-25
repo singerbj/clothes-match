@@ -7,8 +7,7 @@ import {
     NavbarToggler,
     NavbarBrand,
     Nav,
-    NavItem,
-    Container
+    NavItem
 } from 'reactstrap';
 
 import GlobalController from './app/GlobalController';
@@ -18,7 +17,7 @@ import Contact from './contact/Contact';
 import Login from './login/Login';
 import Register from './register/Register';
 import LoadingMask from './app/LoadingMask';
-import axios from 'axios';
+import Api from './app/Api';
 
 class Content extends Component{
     constructor() {
@@ -52,14 +51,7 @@ class Content extends Component{
 
     logout = () => {
         let that = this;
-        if(this.source){
-            this.source.cancel('Operation canceled by the user.');
-        }
-        const CancelToken = axios.CancelToken;
-        this.source = CancelToken.source();
-        axios.post('/logout', {}, {
-            cancelToken: this.source.token
-        }).then((data) => {
+        Api.post('/logout', {}).then((data) => {
             delete that.source;
             that.setState({ loggedIn: false, checkingAuth: false });
         }).catch(function(thrown){
@@ -72,25 +64,14 @@ class Content extends Component{
 
     checkAuth = () => {
         let that = this;
-        that.setState({ checkingAuth: Date.now() });
-        if(this.source){
-            this.source.cancel('Operation canceled by the user.');
-        }
-        const CancelToken = axios.CancelToken;
-        this.source = CancelToken.source();
-        axios.get('/session', {
-            cancelToken: this.source.token
-        }).then((data) => {
+        Api.get('/session').then((data) => {
             if(data.status === 401){
-                delete that.source;
                 that.setState({ loggedIn: false, checkingAuth: false });
             } else {
-                delete that.source;
                 that.setState({ loggedIn: true, checkingAuth: false, navigate: undefined });
             }
         }).catch(function(thrown){
-            delete that.source;
-            if (!axios.isCancel(thrown)) {
+            if (!Api.isCancel(thrown)) {
                 that.setState({ loggedIn: false, checkingAuth: false });
             }
         });
@@ -114,43 +95,43 @@ class Content extends Component{
         }
         return (
             <React.Fragment>
-                <Navbar color="light" light expand="md">
-                    <NavbarBrand>Sails React starter</NavbarBrand>
-                    <NavbarToggler onClick={this.toggle} />
-                    <Collapse isOpen={this.state.isOpen} navbar>
-                        <Nav className="mr-auto" navbar>
-                            <NavItem onClick={this.checkAuth}>
-                                <Link className="nav-link" to="/home">Home</Link>
-                            </NavItem>
-                            <NavItem onClick={this.checkAuth}>
-                                <Link className="nav-link" to="/contact">Contact</Link>
-                            </NavItem>
-                            { !this.state.loggedIn &&
+                <header>
+                    <Navbar color="light" light expand="md">
+                        <NavbarBrand>Sails React starter</NavbarBrand>
+                        <NavbarToggler onClick={this.toggle} />
+                        <Collapse isOpen={this.state.isOpen} navbar>
+                            <Nav className="mr-auto" navbar>
                                 <NavItem onClick={this.checkAuth}>
-                                    <Link className="nav-link" to="/login">Login</Link>
+                                    <Link className="nav-link" to="/home">Home</Link>
                                 </NavItem>
-                            }
-                            { !this.state.loggedIn &&
                                 <NavItem onClick={this.checkAuth}>
-                                    <Link className="nav-link" to="/register">Register</Link>
+                                    <Link className="nav-link" to="/contact">Contact</Link>
                                 </NavItem>
-                            }
-                            { this.state.loggedIn &&
-                                <NavItem onClick={this.logout}>
-                                    <a className="nav-link">Logout</a>
-                                </NavItem>
-                            }
-                        </Nav>
-                    </Collapse>
-                </Navbar>
-                <main>
-                    <Container>
-                        <Route exact path="/" component={Home} />
-                        <Route path="/home" component={Home} />
-                        <Route path="/contact" render={() => this.requireAuth(Contact)} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/register" component={Register} />
-                    </Container>
+                                { !this.state.loggedIn &&
+                                    <NavItem onClick={this.checkAuth}>
+                                        <Link className="nav-link" to="/login">Login</Link>
+                                    </NavItem>
+                                }
+                                { !this.state.loggedIn &&
+                                    <NavItem onClick={this.checkAuth}>
+                                        <Link className="nav-link" to="/register">Register</Link>
+                                    </NavItem>
+                                }
+                                { this.state.loggedIn &&
+                                    <NavItem onClick={this.logout}>
+                                        <a className="nav-link">Logout</a>
+                                    </NavItem>
+                                }
+                            </Nav>
+                        </Collapse>
+                    </Navbar>
+                </header>
+                <main role="main">
+                    <Route exact path="/" component={Home} />
+                    <Route path="/home" component={Home} />
+                    <Route path="/contact" render={() => this.requireAuth(Contact)} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
                 </main>
             </React.Fragment>
         );
