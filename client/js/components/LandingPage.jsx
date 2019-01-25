@@ -7,10 +7,6 @@ class LandingPage extends Component{
         super();
     }
 
-    onRouteChange = () => {
-        console.log("onRouteChange");
-    }
-
     render() {
         return (
             <Router>

@@ -22,8 +22,10 @@ export default class Login extends Component {
         axios.post('/login', this.state, {
             cancelToken: this.source.token
         }).then((response) => {
+            delete that.source;
             GlobalController.navigate('/home');
         }).catch((error) => {
+            delete that.source;
             GlobalController.navigate('/home');
         });
     }
@@ -45,7 +47,6 @@ export default class Login extends Component {
                 <label htmlFor="password">Password</label>
                 <input name="password" type="password" className="form-control" value={this.state.password} onChange={this.handleChange}/>
             </div>
-
             <button className="btn btn-primary" onClick={this.login}>Login</button>
         </div>);
     }

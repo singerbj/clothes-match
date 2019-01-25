@@ -8,7 +8,6 @@ module.exports = {
             password: req.body.password
         }).exec(function(err, user) {
             if (err) {
-                sails.log(err);
                 res.serverError(err);
             } else {
                 res.send(user);
@@ -16,9 +15,7 @@ module.exports = {
         });
     },
     login: function (req, res, next) {
-        sails.log(req.body);
         passport.authenticate('local', req.body, function (err, user, response) {
-            sails.log(err, user, response);
             if (err) {
                 return next(err);
             }

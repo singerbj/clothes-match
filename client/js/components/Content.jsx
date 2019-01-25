@@ -60,9 +60,10 @@ class Content extends Component{
         axios.post('/logout', {}, {
             cancelToken: this.source.token
         }).then((data) => {
-            delete this.source;
+            delete that.source;
             that.setState({ loggedIn: false, checkingAuth: false });
         }).catch(function(thrown){
+            delete that.source;
             if (!axios.isCancel(thrown)) {
                 that.setState({ loggedIn: false, checkingAuth: false });
             }
@@ -81,13 +82,14 @@ class Content extends Component{
             cancelToken: this.source.token
         }).then((data) => {
             if(data.status === 401){
-                delete this.source;
+                delete that.source;
                 that.setState({ loggedIn: false, checkingAuth: false });
             } else {
-                delete this.source;
-                that.setState({ loggedIn: true, checkingAuth: false });
+                delete that.source;
+                that.setState({ loggedIn: true, checkingAuth: false, navigate: undefined });
             }
         }).catch(function(thrown){
+            delete that.source;
             if (!axios.isCancel(thrown)) {
                 that.setState({ loggedIn: false, checkingAuth: false });
             }
