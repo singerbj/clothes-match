@@ -35,7 +35,7 @@ export default class SignUp extends Component {
                         <h1>Signup</h1>
 
                         <div className="form-group">
-                            <label htmlFor="email">Primary Email</label>
+                            <label htmlFor="email">Email</label>
                             <input name="email" className="form-control" type="email" value={this.state.email} onChange={this.handleChange}/>
                         </div>
 

@@ -17,6 +17,10 @@ module.exports = {
         password: {
             type: 'string',
             required: true
+        },
+        password: {
+            type: 'string',
+            required: true
         }
     },
     customToJSON: function() {
