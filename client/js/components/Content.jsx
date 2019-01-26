@@ -14,6 +14,7 @@ import GlobalController from './app/GlobalController';
 
 import Home from './home/Home';
 import About from './about/About';
+import Products from './products/Products';
 import Login from './login/Login';
 import Register from './register/Register';
 import LoadingMask from './app/LoadingMask';
@@ -105,7 +106,10 @@ class Content extends Component{
                                     <Link className="nav-link" to="/home">Home</Link>
                                 </NavItem>
                                 <NavItem onClick={this.checkAuth}>
-                                    <Link className="nav-link" to="/contact">About</Link>
+                                    <Link className="nav-link" to="/about">About</Link>
+                                </NavItem>
+                                <NavItem onClick={this.checkAuth}>
+                                    <Link className="nav-link" to="/products">Products</Link>
                                 </NavItem>
                                 { !this.state.loggedIn &&
                                     <NavItem onClick={this.checkAuth}>
@@ -129,7 +133,8 @@ class Content extends Component{
                 <main role="main">
                     <Route exact path="/" component={Home} />
                     <Route path="/home" component={Home} />
-                    <Route path="/contact" render={() => this.requireAuth(About)} />
+                    <Route path="/about" render={() => this.requireAuth(About)} />
+                    <Route path="/products" render={() => this.requireAuth(Products)} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
                 </main>

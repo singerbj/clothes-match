@@ -17,7 +17,8 @@ module.exports.routes = {
     'POST /register': {controller: 'PassportController', action: 'register'},
     'POST /login':    {controller: 'PassportController', action: 'login'},
     'POST /logout':  {controller: 'PassportController', action: 'logout'},
-    'GET  /test':     {controller: 'UserController', action: 'session'},
     'GET  /session':     {controller: 'UserController', action: 'session'},
+
+    'GET  /products':     {controller: 'ProductController', action: 'getAll'},
 
 };

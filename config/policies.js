@@ -26,5 +26,8 @@ module.exports.policies = {
     },
     UserController: {
         '*': 'isAuthenticated'
+    },
+    ProductController: {
+        '*': 'isAuthenticated'
     }
 };

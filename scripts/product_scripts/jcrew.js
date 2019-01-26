@@ -4,6 +4,7 @@ const q = require('q');
 const fs = require('fs');
 const { createCanvas, loadImage } = require('canvas');
 var Vibrant = require('node-vibrant');
+var sails = require('sails');
 
 var imagesDir = __dirname + '/tmp_images/';
 var resultsDir = __dirname + '/tmp_results/';
@@ -19,9 +20,9 @@ var showError = (err) => {
 };
 
 var getRandomInt = (min, max) => {
-  var min = Math.ceil(min);
-  var max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
+    var min = Math.ceil(min);
+    var max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
 };
 
 var download = (uri, filename) => {
@@ -55,13 +56,13 @@ var replaceBackground = (fileName, imageFilenameP) => {
             ctx = canvas.getContext("2d"),
             ctx.drawImage(image, 0, 0);
             var imgd = ctx.getImageData(0, 0, 400, 400),
-                pix = imgd.data,
-                newColor = {r: 0, g: 0, b: 0, a: 0};
+            pix = imgd.data,
+            newColor = {r: 0, g: 0, b: 0, a: 0};
 
             for (var i = 0, n = pix.length; i <n; i += 4) {
                 var r = pix[i],
-                    g = pix[i+1],
-                    b = pix[i+2];
+                g = pix[i+1],
+                b = pix[i+2];
 
                 // if(r >= 242 && g >= 242 && b >= 242){
                 if((r + g + b) >= 720){
@@ -181,6 +182,28 @@ q.all(productPromises).then(() => {
             });
         });
         q.all(imageProcessPromises).then((a) => {
+            sails.load(function(err) {
+                if (err) {
+                    console.log('Error occurred loading Sails app:', err);
+                    return;
+                }
+                Object.keys(productsObj).forEach((category) => {
+                    console.log("Writing category to db: " + category);
+                    Product.createEach(productsObj[category].map((product) => {
+                        return {
+                            ...product,
+                            category: category,
+                            store: 'jcrew'
+                        };
+                    })).exec(function(err, product) {
+            			if (err) {
+            				console.log(err);
+            			} else {
+            				console.log("Product saved:" + product.description);
+            			}
+            		});
+                });
+            });
             fs.writeFile(resultsDir + 'jcrew.json', JSON.stringify(productsObj), 'utf8', () => console.log("All Done!"));
         }).catch((err) => showError(err));
     }).catch((err) => showError(err));

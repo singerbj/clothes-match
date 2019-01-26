@@ -1,18 +1,17 @@
 /**
-* UserController
+* ProductController
 *
 * @description :: Server-side actions for handling incoming requests.
 * @help        :: See https://sailsjs.com/docs/concepts/actions
 */
-var sails = require('sails');
 
 module.exports = {
-	session: (req, res) => {
-		User.findOne({id: req.user.id}).exec(function(err, user) {
+    getAll: (req, res) => {
+		Product.find({}).exec(function(err, products) {
 			if (err) {
 				res.serverError(err);
 			} else {
-				res.send(user);
+				res.send(products);
 			}
 		});
 	}
