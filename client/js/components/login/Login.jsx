@@ -14,11 +14,14 @@ export default class Login extends Component {
     }
 
     login = () => {
-
-        Api.post('/login', this.state).then((response) => {
+        const self = this;
+        Api.post('/api/login', this.state).then((response) => {
             GlobalController.navigate('/home');
         }).catch((error) => {
-            GlobalController.navigate('/home');
+            self.setState({
+                email: "",
+                password: ""
+            });
         });
     }
 

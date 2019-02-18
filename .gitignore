@@ -137,5 +137,4 @@ __snapshots__
 *.lock
 *.lock.json
 
-scripts/product_scripts/tmp_images/*
-scripts/product_scripts/tmp_results/*
+assets/**/*

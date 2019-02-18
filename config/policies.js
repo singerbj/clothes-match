@@ -29,5 +29,8 @@ module.exports.policies = {
     },
     ProductController: {
         '*': 'isAuthenticated'
+    },
+    PreferenceController: {
+        '*': 'isAuthenticated'
     }
 };

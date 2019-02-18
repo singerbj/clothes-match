@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Jumbotron, Button } from 'reactstrap';
+import { Jumbotron, Card, CardImg, CardText, CardBody,
+  CardTitle, CardSubtitle, Button, Row, Col } from 'reactstrap';
 import Api from '../app/Api'
 import LoadingMask from '../app/LoadingMask';
 
@@ -13,7 +14,7 @@ export default class Products extends Component {
 
     componentDidMount = () => {
         const that = this;
-        Api.get('/products').then((response) => {
+        Api.get('/api/products').then((response) => {
             this.setState({ products: response.data });
         }).catch((error) => {
             console.log(error);
@@ -25,15 +26,23 @@ export default class Products extends Component {
             return <LoadingMask />;
         }
         return (
-            <div>
-                {this.state.products.map((product, index) => {
-                    return (
-                        <div key={index}>
-                            {product.id + " - " + product.description}
-                        </div>
-                    );
-                })}
-            </div>
+            <Row>
+                <Col>
+                    {this.state.products.map((product, index) => {
+                        return (
+                            <Card key={product.id}>
+                                <CardImg top width="100%" src={"assets/images/" + product.store + "/" + product.id + ".png"}/>
+                                <CardBody>
+                                    <CardTitle>{product.description}</CardTitle>
+                                    <CardSubtitle>{product.store}</CardSubtitle>
+                                    <CardText>{product.price}</CardText>
+                                    <Button>Find Matching Products</Button>
+                                </CardBody>
+                            </Card>
+                        );
+                    })}
+                </Col>
+            </Row>
         );
     }
 }

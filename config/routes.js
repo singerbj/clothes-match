@@ -14,11 +14,14 @@ module.exports.routes = {
         action: 'render',
         skipAssets: true
     },
-    'POST /register': {controller: 'PassportController', action: 'register'},
-    'POST /login':    {controller: 'PassportController', action: 'login'},
-    'POST /logout':  {controller: 'PassportController', action: 'logout'},
-    'GET  /session':     {controller: 'UserController', action: 'session'},
+    'POST /api/register': {controller: 'PassportController', action: 'register'},
+    'POST /api/login': {controller: 'PassportController', action: 'login'},
+    'POST /api/logout': {controller: 'PassportController', action: 'logout'},
+    'GET  /api/session': {controller: 'UserController', action: 'session'},
 
-    'GET  /products':     {controller: 'ProductController', action: 'getAll'},
+    'GET  /api/products': {controller: 'ProductController', action: 'getAll'},
+    'GET  /api/two_random_products': {controller: 'ProductController', action: 'getTwoRandom'},
 
+    'GET  /api/preferences': {controller: 'PreferenceController', action: 'getAll'},
+    'POST /api/preference': {controller: 'PreferenceController', action: 'savePreference'}
 };

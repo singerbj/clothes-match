@@ -15,6 +15,7 @@ import GlobalController from './app/GlobalController';
 import Home from './home/Home';
 import About from './about/About';
 import Products from './products/Products';
+import Train from './train/Train';
 import Login from './login/Login';
 import Register from './register/Register';
 import LoadingMask from './app/LoadingMask';
@@ -25,7 +26,7 @@ class Content extends Component{
         super();
         this.state = {
             loggedIn: false,
-            checkingAuth: false,
+            checkingAuth: true,
             isOpen: false,
             navigate: undefined
         }
@@ -52,28 +53,38 @@ class Content extends Component{
 
     logout = () => {
         let that = this;
-        Api.post('/logout', {}).then((data) => {
+        Api.post('/api/logout', {}).then((data) => {
             delete that.source;
-            that.setState({ loggedIn: false, checkingAuth: false });
+            that.setState({ loggedIn: false, checkingAuth: false }, () => {
+                delete GlobalController.currentUser;
+            });
         }).catch(function(thrown){
             delete that.source;
             if (!axios.isCancel(thrown)) {
-                that.setState({ loggedIn: false, checkingAuth: false });
+                that.setState({ loggedIn: false, checkingAuth: false }, () => {
+                    delete GlobalController.currentUser;
+                });
             }
         });
     }
 
     checkAuth = () => {
         let that = this;
-        Api.get('/session').then((data) => {
+        Api.get('/api/session').then((data) => {
             if(data.status === 401){
-                that.setState({ loggedIn: false, checkingAuth: false });
+                that.setState({ loggedIn: false, checkingAuth: false }, () => {
+                    delete GlobalController.currentUser;
+                });
             } else {
-                that.setState({ loggedIn: true, checkingAuth: false, navigate: undefined });
+                that.setState({ loggedIn: true, checkingAuth: false, navigate: undefined }, () => {
+                    GlobalController.currentUser = data.data;
+                });
             }
         }).catch(function(thrown){
             if (!Api.isCancel(thrown)) {
-                that.setState({ loggedIn: false, checkingAuth: false });
+                that.setState({ loggedIn: false, checkingAuth: false }, () => {
+                    delete GlobalController.currentUser;
+                });
             }
         });
     }
@@ -108,9 +119,16 @@ class Content extends Component{
                                 <NavItem onClick={this.checkAuth}>
                                     <Link className="nav-link" to="/about">About</Link>
                                 </NavItem>
-                                <NavItem onClick={this.checkAuth}>
-                                    <Link className="nav-link" to="/products">Products</Link>
-                                </NavItem>
+                                { this.state.loggedIn &&
+                                    <NavItem onClick={this.checkAuth}>
+                                        <Link className="nav-link" to="/products">Products</Link>
+                                    </NavItem>
+                                }
+                                { this.state.loggedIn &&
+                                    <NavItem onClick={this.checkAuth}>
+                                        <Link className="nav-link" to="/train">Train</Link>
+                                    </NavItem>
+                                }
                                 { !this.state.loggedIn &&
                                     <NavItem onClick={this.checkAuth}>
                                         <Link className="nav-link" to="/login">Login</Link>
@@ -133,8 +151,9 @@ class Content extends Component{
                 <main role="main">
                     <Route exact path="/" component={Home} />
                     <Route path="/home" component={Home} />
-                    <Route path="/about" render={() => this.requireAuth(About)} />
+                    <Route path="/about" component={About} />
                     <Route path="/products" render={() => this.requireAuth(Products)} />
+                    <Route path="/train" render={() => this.requireAuth(Train)} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
                 </main>

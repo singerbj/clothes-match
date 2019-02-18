@@ -5,6 +5,8 @@
 * @help        :: See https://sailsjs.com/docs/concepts/actions
 */
 
+const q = require('q');
+
 module.exports = {
     getAll: (req, res) => {
 		Product.find({}).exec(function(err, products) {
@@ -14,5 +16,18 @@ module.exports = {
 				res.send(products);
 			}
 		});
+	},
+    getTwoRandom: (req, res) => {
+        q.all([
+            Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count))),
+            Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count)))
+        ]).then(products => {
+            res.send([products[0][0], products[1][0]]);
+        }).catch((err) => {
+            res.serverError(err);
+        });
+	},
+    image: (req, res) => {
+        res.send();
 	}
 };

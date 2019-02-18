@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const precss = require('precss');
 const autoprefixer = require('autoprefixer');
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 console.log('webpack config');
 
@@ -53,6 +54,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'views/pages/homepage-webpack.ejs'
-        })
+        }),
+        new CopyWebpackPlugin([{ from: 'assets/images/**/*', to: '.' }])
     ]
 };

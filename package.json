@@ -42,6 +42,7 @@
     "babel-preset-react": "^6.24.1",
     "brain.js": "^1.4.2",
     "canvas": "^2.0.1",
+    "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^0.28.11",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
@@ -78,7 +79,8 @@
     "clean": "rimraf .tmp && mkdirp .tmp/public",
     "lift": "sails lift",
     "sails": "node app.js",
-    "debug": "node --inspect app.js"
+    "debug": "node --inspect app.js",
+    "get-data": "node /scripts/product_scripts/jcrew.js"
   },
   "jest": {
     "setupFiles": [

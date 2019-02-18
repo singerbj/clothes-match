@@ -6,8 +6,12 @@ const { createCanvas, loadImage } = require('canvas');
 var Vibrant = require('node-vibrant');
 var sails = require('sails');
 
-var imagesDir = __dirname + '/tmp_images/';
-var resultsDir = __dirname + '/tmp_results/';
+console.log(__dirname);
+
+var storeKey = 'jcrew';
+var imagesDir = __dirname + '/../../assets/images/' + storeKey + '/';
+var resultsDir = __dirname + '/../../assets/data/' + storeKey + '/';
+
 [imagesDir, resultsDir].forEach((dir) => {
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
@@ -123,6 +127,15 @@ var processImage = (product) => {
                 colors = colors.sort((a, b) => a[3] < b[3]).map((a) => a.splice(0, 3));
             }
             product.colors = colors;
+            product.r1 = colors && colors[0] ? parseFloat(colors[0][0]) : -1;
+            product.r2 = colors && colors[1] ? parseFloat(colors[1][0]) : -1;
+            product.r3 = colors && colors[2] ? parseFloat(colors[2][0]) : -1;
+            product.g1 = colors && colors[0] ? parseFloat(colors[0][1]) : -1;
+            product.g2 = colors && colors[1] ? parseFloat(colors[1][1]) : -1;
+            product.g3 = colors && colors[2] ? parseFloat(colors[2][1]) : -1;
+            product.b1 = colors && colors[0] ? parseFloat(colors[0][2]) : -1;
+            product.b2 = colors && colors[1] ? parseFloat(colors[1][2]) : -1;
+            product.b3 = colors && colors[2] ? parseFloat(colors[2][2]) : -1;
             deferred.resolve(colors);
         });
     }).catch((err) => {
@@ -181,7 +194,7 @@ q.all(productPromises).then(() => {
                 imageProcessPromises.push(processImage(product));
             });
         });
-        q.all(imageProcessPromises).then((a) => {
+        q.all(imageProcessPromises).then(() => {
             sails.load(function(err) {
                 if (err) {
                     console.log('Error occurred loading Sails app:', err);
@@ -193,7 +206,7 @@ q.all(productPromises).then(() => {
                         return {
                             ...product,
                             category: category,
-                            store: 'jcrew'
+                            store: storeKey
                         };
                     })).exec(function(err, product) {
             			if (err) {

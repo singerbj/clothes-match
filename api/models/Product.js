@@ -44,9 +44,58 @@ module.exports = {
             type: 'number',
             required: true
         },
-        colors: {
-            type: 'json',
+        r1: {
+            type: 'number',
+            required: true
+        },
+        r2: {
+            type: 'number',
+            required: true
+        },
+        r3: {
+            type: 'number',
+            required: true
+        },
+        g1: {
+            type: 'number',
+            required: true
+        },
+        g2: {
+            type: 'number',
+            required: true
+        },
+        g3: {
+            type: 'number',
+            required: true
+        },
+        b1: {
+            type: 'number',
+            required: true
+        },
+        b2: {
+            type: 'number',
+            required: true
+        },
+        b3: {
+            type: 'number',
             required: true
         }
+    },
+    // retrieves a random record from the database
+    random: function(cb) {
+        var self = this;
+        this.count(function(err, num) {
+            if(err)
+            return cb(err, false);
+
+            var randm = Math.floor((Math.random() * num));
+
+            if(randm < 0) randm = 0;
+
+            self.find({skip: randm, limit: 1}).exec(function(err, image) {
+                return cb(err, image);
+            });
+        });
+
     }
 };

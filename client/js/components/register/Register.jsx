@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Jumbotron, Button, Container, Row, Col } from 'reactstrap';
 import Api from '../app/Api';
 
+import GlobalController from '../app/GlobalController';
+
 export default class SignUp extends Component {
     constructor(props) {
         super(props);
@@ -12,9 +14,7 @@ export default class SignUp extends Component {
     }
 
     signUp = () => {
-        Api.post('/register', this.state, {
-            cancelToken: this.source.token
-        }).then((response) => {
+        Api.post('/api/register', this.state).then((response) => {
             GlobalController.navigate('/home');
         }).catch((error) => {
             GlobalController.navigate('/home');
