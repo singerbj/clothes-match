@@ -80,7 +80,7 @@
     "lift": "sails lift",
     "sails": "node app.js",
     "debug": "node --inspect app.js",
-    "get-data": "node /scripts/product_scripts/jcrew.js"
+    "get-data": "node ./scripts/product_scripts/jcrew.js"
   },
   "jest": {
     "setupFiles": [

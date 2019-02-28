@@ -6,15 +6,20 @@ const { createCanvas, loadImage } = require('canvas');
 var Vibrant = require('node-vibrant');
 var sails = require('sails');
 
-console.log(__dirname);
-
 var storeKey = 'jcrew';
+
+var rootDir = __dirname + '/../../assets/';
+var imagesRootDir = __dirname + '/../../assets/images/';
+var dataRootDir = __dirname + '/../../assets/data/';
 var imagesDir = __dirname + '/../../assets/images/' + storeKey + '/';
 var resultsDir = __dirname + '/../../assets/data/' + storeKey + '/';
 
-[imagesDir, resultsDir].forEach((dir) => {
+[rootDir, imagesRootDir, dataRootDir, imagesDir, resultsDir].forEach((dir) => {
     if (!fs.existsSync(dir)){
+        console.log("creating dir: " + dir);
         fs.mkdirSync(dir);
+    } else {
+        console.log("already created dir: " + dir);
     }
 });
 
@@ -144,7 +149,7 @@ var processImage = (product) => {
     return deferred.promise;
 };
 
-var categories = ['shirts', 'pants'];
+var categories = ['shirts', 'tees_henleys', 'polos', 'sweaters', 'denim_sm', 'pants', 'shorts'];
 var productsObj = {};
 var productPromises = [];
 
@@ -166,8 +171,9 @@ categories.forEach((category) => {
                         price: product.listPrice.amount,
                         colors: []
                     };
-                    if(!dupTracker[productData.imageFilename]){
+                    if(!dupTracker[productData.imageFilename] && !dupTracker[productData.id]){
                         dupTracker[productData.imageFilename] = true;
+                        dupTracker[productData.id] = true;
                         productsObj[category].push(productData);
                     } else {
                         console.log("Duplicate product found: " + productData.imageFilename);
@@ -208,11 +214,12 @@ q.all(productPromises).then(() => {
                             category: category,
                             store: storeKey
                         };
-                    })).exec(function(err, product) {
+                    })).exec(function(err, savedProduct) {
             			if (err) {
+                            console.log(product);
             				console.log(err);
             			} else {
-            				console.log("Product saved:" + product.description);
+            				console.log("Product saved:" + savedProduct.description);
             			}
             		});
                 });

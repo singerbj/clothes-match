@@ -60,6 +60,9 @@ export default class Train extends Component {
                 <Button color={"danger"} onClick={() => this.sendPreference(false)}>
                     Yikes, No Thanks
                 </Button>
+                <Button color={"default"} onClick={() => this.getTwoProducts()}>
+                    Skip
+                </Button>
             </div>
         );
     }

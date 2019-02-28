@@ -18,12 +18,24 @@ module.exports = {
 		});
 	},
     getTwoRandom: (req, res) => {
-        q.all([
-            Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count))),
-            Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count)))
-        ]).then(products => {
-            res.send([products[0][0], products[1][0]]);
-        }).catch((err) => {
+        // q.all([
+        //     Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count))),
+        //     Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count)))
+        // ]).then(products => {
+        //     res.send([products[0][0], products[1][0]]);
+        // }).catch((err) => {
+        //     res.serverError(err);
+        // });
+
+        Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count))).then(function(products) {
+            Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count))).then(function(products2) {
+    				res.send([products[0][0], products2[1][0]]);
+    		}).catch((err) => {
+                sails.log(3, err);
+                res.serverError(err);
+            });
+		}).catch((err) => {
+            sails.log(4, err);
             res.serverError(err);
         });
 	},
