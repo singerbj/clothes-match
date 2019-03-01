@@ -18,24 +18,21 @@ module.exports = {
 		});
 	},
     getTwoRandom: (req, res) => {
-        // q.all([
-        //     Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count))),
-        //     Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count)))
-        // ]).then(products => {
-        //     res.send([products[0][0], products[1][0]]);
-        // }).catch((err) => {
-        //     res.serverError(err);
-        // });
+        const firstCategories = ['shirts', 'tees_henleys', 'polos', 'sweaters'];
+        const secondCategories = ['pants', 'shorts'];
+        const firstCrit = {
+            category: firstCategories[Math.floor(Math.random() * firstCategories.length)]
+        };
+        const secondCrit = {
+            category: secondCategories[Math.floor(Math.random() * secondCategories.length)]
+        };
 
-        Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count))).then(function(products) {
-            Product.count().then(count => Product.find().limit(1).skip(Math.floor(Math.random() * count))).then(function(products2) {
-    				res.send([products[0][0], products2[1][0]]);
-    		}).catch((err) => {
-                sails.log(3, err);
-                res.serverError(err);
-            });
-		}).catch((err) => {
-            sails.log(4, err);
+        q.all([
+            Product.count(firstCrit).then(count => Product.find(firstCrit).limit(1).skip(Math.floor(Math.random() * count))),
+            Product.count(secondCrit).then(count => Product.find(secondCrit).limit(1).skip(Math.floor(Math.random() * count)))
+        ]).then(products => {
+            res.send([products[0][0], products[1][0]]);
+        }).catch((err) => {
             res.serverError(err);
         });
 	},
