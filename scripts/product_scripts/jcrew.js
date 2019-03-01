@@ -216,7 +216,6 @@ q.all(productPromises).then(() => {
                         };
                     })).exec(function(err, savedProduct) {
             			if (err) {
-                            console.log(product);
             				console.log(err);
             			} else {
             				console.log("Product saved:" + savedProduct.description);

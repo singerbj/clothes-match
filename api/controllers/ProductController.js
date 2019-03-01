@@ -35,8 +35,5 @@ module.exports = {
         }).catch((err) => {
             res.serverError(err);
         });
-	},
-    image: (req, res) => {
-        res.send();
 	}
 };
