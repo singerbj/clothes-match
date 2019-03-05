@@ -24,7 +24,7 @@ export default class Train extends Component {
         });
     }
 
-    sendPreference = (like) => {
+    sendPreference = (matches) => {
         const that = this;
         var product1 = this.state.products[0];
         var product2 = this.state.products[1];
@@ -32,7 +32,7 @@ export default class Train extends Component {
             Api.post('/api/preference', {
                 productId1: product1.id,
                 productId2: product2.id,
-                like
+                matches
             }).then((response) => {
                 that.getTwoProducts();
             }).catch((error) => {

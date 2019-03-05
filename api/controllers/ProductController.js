@@ -9,13 +9,34 @@ const q = require('q');
 
 module.exports = {
     getAll: (req, res) => {
-		Product.find({}).exec(function(err, products) {
-			if (err) {
-				res.serverError(err);
-			} else {
-				res.send(products);
-			}
-		});
+        q.all([
+            Product.find(),
+            Suggestion.find()
+        ]).then(results => {
+            const suggestionsMap = {};
+            const productMap = {};
+            results[0].forEach((product) => {
+                productMap[product.id] = product;
+            });
+            results[1].forEach((suggestion) => {
+                if(!suggestionsMap[suggestion.productId1]){
+                    suggestionsMap[suggestion.productId1] = [];
+                }
+                if(!suggestionsMap[suggestion.productId2]){
+                    suggestionsMap[suggestion.productId2] = [];
+                }
+                suggestionsMap[suggestion.productId1].push({ ...productMap[suggestion.productId2], matches: suggestion.matches });
+                suggestionsMap[suggestion.productId2].push({ ...productMap[suggestion.productId1], matches: suggestion.matches });
+            });
+            results[0].forEach((product) => {
+                product.suggestions = suggestionsMap[product.id] || [];
+            });
+            res.send({
+                products: results[0]
+            });
+        }).catch((err) => {
+            res.serverError(err);
+        });
 	},
     getTwoRandom: (req, res) => {
         const firstCategories = ['shirts', 'tees_henleys', 'polos', 'sweaters'];

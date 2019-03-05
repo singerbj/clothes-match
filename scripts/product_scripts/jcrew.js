@@ -206,24 +206,32 @@ q.all(productPromises).then(() => {
                     console.log('Error occurred loading Sails app:', err);
                     return;
                 }
-                Object.keys(productsObj).forEach((category) => {
-                    console.log("Writing category to db: " + category);
-                    Product.createEach(productsObj[category].map((product) => {
-                        return {
-                            ...product,
-                            category: category,
-                            store: storeKey
-                        };
-                    })).exec(function(err, savedProduct) {
-            			if (err) {
-            				console.log(err);
-            			} else {
-            				console.log("Product saved:" + savedProduct.description);
-            			}
-            		});
-                });
+                Product.destroy({ id: { '!=' : '_-!*!-_' } }).exec(function(err, savedProduct) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("All products deleted!");
+                        Object.keys(productsObj).forEach((category) => {
+                            console.log("Writing category to db: " + category);
+                            Product.createEach(productsObj[category].map((product) => {
+                                return {
+                                    ...product,
+                                    category: category,
+                                    store: storeKey
+                                };
+                            })).exec(function(err, savedProduct) {
+                    			if (err) {
+                    				console.log(err);
+                    			} else {
+                    				console.log("Product saved:" + savedProduct.description);
+                    			}
+                    		});
+                        });
+                    }
+                });;
+
             });
-            fs.writeFile(resultsDir + 'jcrew.json', JSON.stringify(productsObj), 'utf8', () => console.log("All Done!"));
+            fs.writeFile(resultsDir + 'jcrew.json', JSON.stringify(productsObj), 'utf8', () => console.log("JSON file written!"));
         }).catch((err) => showError(err));
     }).catch((err) => showError(err));
 }).catch((err) => showError(err));

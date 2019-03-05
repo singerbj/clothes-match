@@ -15,7 +15,10 @@ export default class Products extends Component {
     componentDidMount = () => {
         const that = this;
         Api.get('/api/products').then((response) => {
-            this.setState({ products: response.data });
+            this.setState({
+                products: response.data.products,
+                suggestions: response.data.suggestions
+             });
         }).catch((error) => {
             console.log(error);
         });
@@ -37,6 +40,9 @@ export default class Products extends Component {
                                     <CardSubtitle>{product.store}</CardSubtitle>
                                     <CardText>{product.price}</CardText>
                                     <Button>Find Matching Products</Button>
+                                    {product.suggestions.map((suggestedProduct, i) => {
+                                        return <img key={i} src={"assets/images/" + suggestedProduct.store + "/" + suggestedProduct.id + ".png"} style={{ width: '100px'}}/>
+                                    })}
                                 </CardBody>
                             </Card>
                         );
