@@ -110,7 +110,7 @@ sails.load(function(err) {
                     }
                 });
                 //sort by match
-                product1.suggestions.sort((a, b) => {
+                product1.suggestions = product1.suggestions.sort((a, b) => { //SOMETHING IS WRONG HERE
                     var aVal = a.matches;
                     var bVal = b.matches;
                     if (aVal > bVal) {
@@ -120,9 +120,9 @@ sails.load(function(err) {
                         return 1;
                     }
                     return 0;
-                });
+                }).slice(0, 10);
                 //add the top 10
-                allSuggestions.push(product1.suggestions.slice(0, 10));
+                allSuggestions.push(product1.suggestions);
             });
 
             //save to the database
